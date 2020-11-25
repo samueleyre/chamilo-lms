@@ -299,16 +299,14 @@ class CheckExtraFieldAuthorsCompanyPlugin extends Plugin
             }
 
             for ($i = 0; $i < count($options); $i++) {
-                if (isset($options[$i])) {
-                    $extraFieldOptionValue = $options[$i];
-                    $fieldOption = new ExtraFieldOption('user');
-                    $fieldOption->saveOptions([
-                        'field_id' => $authorLpId,
-                        'option_value' => $order,
-                        'display_text' => $extraFieldOptionValue,
-                        'option_order' => $order,
-                    ]);
-                }
+                $extraFieldOptionValue = $options[$i];
+                $fieldOption = new ExtraFieldOption('user');
+                $fieldOption->saveOptions([
+                    'field_id' => $authorLpId,
+                    'option_value' => $order,
+                    'display_text' => $extraFieldOptionValue,
+                    'option_order' => $order,
+                ]);
                 $order++;
             }
         }
