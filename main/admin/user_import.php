@@ -340,7 +340,7 @@ function save_data($users, $sendMail = false)
  *
  * @return array
  */
-function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = true, $resumeImport = false)
+function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = true, $resumeImport = false, $session = null)
 {
     $usersFromOrigin = $users;
     $allowRandom = api_get_configuration_value('generate_random_login');
@@ -377,7 +377,10 @@ function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = t
         }
         $counter++;
         if (empty($user['UserName'])) {
-            if ($allowRandom) {
+            if ('true' === api_get_setting('login_is_email')) {
+                $user['UserName'] = $user['Email'];
+            }
+            elseif ($allowRandom) {
                 $username = $generator->generateString(10, $chars);
                 $user['UserName'] = $username;
             }
@@ -386,7 +389,10 @@ function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = t
             $user['Courses'] = explode('|', trim($user['Courses']));
         }
 
-        if (isset($user['Sessions'])) {
+        if ($session) {
+            $user['Sessions'] = [$session];
+        }
+        elseif (isset($user['Sessions'])) {
             $user['Sessions'] = explode('|', trim($user['Sessions']));
         }
 
@@ -520,6 +526,7 @@ $extra_fields = UserManager::get_extra_fields(0, 0, 5, 'ASC', true);
 
 if (isset($_POST['formSent']) && $_POST['formSent'] && $_FILES['import_file']['size'] !== 0) {
     $file_type = $_POST['file_type'];
+    $session = $_POST['session'];
     Security::clear_token();
     $tok = Security::get_token();
     $allowed_file_mimetype = ['csv', 'xml'];
@@ -543,7 +550,8 @@ if (isset($_POST['formSent']) && $_POST['formSent'] && $_FILES['import_file']['s
                 $_FILES['import_file']['name'],
                 $sendMail,
                 $checkUniqueEmail,
-                $resume
+                $resume,
+                $session
             );
             $users = validate_data($users, $checkUniqueEmail);
             $error_kind_file = false;
@@ -660,10 +668,15 @@ if (!empty($importData)) {
 
 Display::display_header($tool_name);
 
+$sessions = array_map(function ($session) {
+    return $session['name'];
+}, SessionManager::get_sessions_list());
+
 $form = new FormValidator('user_import', 'post', api_get_self());
 $form->addHeader($tool_name);
 $form->addElement('hidden', 'formSent');
 $form->addElement('file', 'import_file', get_lang('ImportFileLocation'));
+$form->addElement('select', 'session', 'Session', $sessions);
 $group = [
     $form->createElement(
         'radio',

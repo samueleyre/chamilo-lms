@@ -40,9 +40,9 @@ class Login
                 $secret_word = self::get_secret_word($user['email']);
                 if ($reset) {
                     $reset_link = $portal_url."main/auth/lostPassword.php?reset=".$secret_word."&id=".$user['uid'];
-                    $reset_link = Display::url($reset_link, $reset_link);
+//                    $reset_link = Display::url($reset_link, $reset_link);
                 } else {
-                    $reset_link = get_lang('Pass')." : $user[password]";
+                    $reset_link = $user[password];
                 }
                 $user_account_list = get_lang('YourRegistrationData')." : \n".
                     get_lang('UserName').' : '.$user['loginName']."\n".
@@ -56,9 +56,9 @@ class Login
                     $secret_word = self::get_secret_word($this_user['email']);
                     if ($reset) {
                         $reset_link = $portal_url."main/auth/lostPassword.php?reset=".$secret_word."&id=".$this_user['uid'];
-                        $reset_link = Display::url($reset_link, $reset_link);
+//                        $reset_link = Display::url($reset_link, $reset_link);
                     } else {
-                        $reset_link = get_lang('Pass')." : $this_user[password]";
+                        $reset_link = $this_user[password];
                     }
                     $user_account_list[] =
                         get_lang('YourRegistrationData')." : \n".
@@ -80,7 +80,7 @@ class Login
                 $reset_link.'';
         }
 
-        return $user_account_list;
+        return $reset_link;
     }
 
     /**
@@ -124,7 +124,15 @@ class Login
         $email_body = nl2br($email_body);
 
         $email_admin = api_get_setting('emailAdministrator');
-        $result = api_mail_html('', $email_to, $email_subject, $email_body, $sender_name, $email_admin);
+        $result = api_mail_html('',
+            $email_to,
+            $email_subject,
+            $email_body,
+            $sender_name,
+            $email_admin,
+            [],[],false,
+            ['NEW_PASSWORD'=> $user_account_list], '', 5
+        );
         if ($result == 1) {
             return get_lang('YourPasswordHasBeenReset');
         } else {
@@ -184,13 +192,23 @@ class Login
         $email_admin = api_get_setting('emailAdministrator');
         $email_body = nl2br($email_body);
 
+        $link = $user_account_list;
+
         $result = @api_mail_html(
             '',
             $email_to,
             $email_subject,
             $email_body,
             $sender_name,
-            $email_admin
+            $email_admin,
+            [],
+            [],
+            false,
+            ['RESET_PASSWORD_LINK' => $link],
+            '',
+            6
+
+
         );
 
         if ($result == 1) {

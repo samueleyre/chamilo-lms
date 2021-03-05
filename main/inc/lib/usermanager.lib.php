@@ -567,19 +567,27 @@ class UserManager
                             );
                         }
 
-                        api_mail_html(
-                            $recipient_name,
-                            $email,
-                            $emailSubject,
-                            $emailBody,
-                            $sender_name,
-                            $email_admin,
-                            null,
-                            null,
-                            null,
-                            $additionalParameters,
-                            $creatorEmail
-                        );
+                        try {
+                            api_mail_html(
+                                $recipient_name,
+                                $email,
+                                $emailSubject,
+                                $emailBody,
+                                $sender_name,
+                                $email_admin,
+                                null,
+                                null,
+                                null,
+                                ['HTML' => $emailBody],
+                                '',
+                                2
+                            );
+                        }
+                        catch (\Exception $e) {
+                            Display::addFlash(
+                                Display::return_message('Une erreur est survenue !')
+                            );
+                        }
 
                         $layoutContent = $tplContent->get_template('mail/new_user_second_email_confirmation.tpl');
                         $emailBody = $tplContent->fetch($layoutContent);
@@ -594,19 +602,27 @@ class UserManager
                             );
                         }
 
-                        api_mail_html(
-                            $recipient_name,
-                            $email,
-                            $emailSubject,
-                            $emailBody,
-                            $sender_name,
-                            $email_admin,
-                            null,
-                            null,
-                            null,
-                            $additionalParameters,
-                            $creatorEmail
-                        );
+                        try {
+                            api_mail_html(
+                                $recipient_name,
+                                $email,
+                                $emailSubject,
+                                $emailBody,
+                                $sender_name,
+                                $email_admin,
+                                null,
+                                null,
+                                null,
+                                ['HTML' => $emailBody],
+                                $creatorEmail,
+                                2
+                            );
+                        }
+                        catch (\Exception $e) {
+                            Display::addFlash(
+                                Display::return_message('Une erreur est survenue !')
+                            );
+                        }
                     } else {
                         if (!empty($emailBodyTemplate)) {
                             $emailBody = $emailBodyTemplate;
@@ -627,19 +643,27 @@ class UserManager
                                 $senderId
                             );
                         } else {
-                            api_mail_html(
-                                $recipient_name,
-                                $email,
-                                $emailSubject,
-                                $emailBody,
-                                $sender_name,
-                                $email_admin,
-                                null,
-                                null,
-                                null,
-                                $additionalParameters,
-                                $creatorEmail
-                            );
+                            try {
+                                api_mail_html(
+                                    $recipient_name,
+                                    $email,
+                                    $emailSubject,
+                                    $emailBody,
+                                    $sender_name,
+                                    $email_admin,
+                                    null,
+                                    null,
+                                    null,
+                                    ['HTML'=>$emailBody],
+                                    $creatorEmail,
+                                    2
+                                );
+                            }
+                            catch (\Exception $e) {
+                                Display::addFlash(
+                                    Display::return_message('Une erreur est survenue !')
+                                );
+                            }
                         }
                     }
 

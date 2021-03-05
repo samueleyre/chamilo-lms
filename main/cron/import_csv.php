@@ -786,6 +786,11 @@ class ImportCsv
      */
     private function importStudents($file, $moveFile = true)
     {
+
+        Display::addFlash(
+            Display::return_message('IMPORT STUDENTS')
+        );
+
         $this->fixCSVFile($file);
         $data = Import::csvToArray($file);
 
@@ -862,7 +867,26 @@ class ImportCsv
                                     because '.$userInfoFromUsername['username'].' with external_user_id '.$value.' exists on the portal';
                                 $this->logger->addInfo($body);
                                 foreach ($emails as $email) {
-                                    api_mail_html('', $email, $subject, $body);
+                                    try {
+                                        api_mail_html(
+                                            '',
+                                            $email,
+                                            $subject,
+                                            2,
+                                            '',
+                                            '',
+                                            [],
+                                            [],
+                                            false,
+                                            [],
+                                            ''
+                                        );
+                                    }
+                                    catch (\Exception $e) {
+                                        Display::addFlash(
+                                            Display::return_message('Une erreur est survenue lors de l\'envoie du mail :'.$email)
+                                        );
+                                    }
                                 }
                             }
                         }

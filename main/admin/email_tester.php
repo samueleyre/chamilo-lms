@@ -9,6 +9,7 @@ $cidReset = true;
 // Including some necessary chamilo files.
 require_once __DIR__.'/../inc/global.inc.php';
 global $platform_email;
+global $sendInBlue;
 
 api_protect_admin_script();
 
@@ -42,18 +43,30 @@ if ($form->validate()) {
 
     $user = api_get_user_entity(api_get_user_id());
 
-    $mailIsSent = api_mail_html(
-        get_lang('UserTestingEMailConf'),
-        $values['destination'],
-        $values['subject'],
-        $values['content'],
-        UserManager::formatUserFullName($user),
-        (!empty($platform_email['SMTP_UNIQUE_SENDER']) ? $platform_email['SMTP_FROM_EMAIL'] : $user->getEmail())
-    );
-
-    Display::addFlash(
-        Display::return_message(get_lang('MailingTestSent'), 'success')
-    );
+    try {
+        $mailIsSent = api_mail_html(
+            get_lang('UserTestingEMailConf'),
+            $values['destination'],
+            $values['subject'],
+            $values['content'],
+            UserManager::formatUserFullName($user),
+            (!empty($platform_email['SMTP_UNIQUE_SENDER']) ? $platform_email['SMTP_FROM_EMAIL'] : $user->getEmail()),
+            [],
+            [],
+            false,
+            [],
+            '',
+            $sendInBlue['templates']['TEST']
+        );
+        Display::addFlash(
+            Display::return_message(get_lang('MailingTestSent'), 'success')
+        );
+    }
+    catch (\Exception $e) {
+        Display::addFlash(
+            Display::return_message($e, 'error')
+        );
+    }
 
     header('Location: '.api_get_self());
     exit;

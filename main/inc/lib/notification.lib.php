@@ -129,7 +129,7 @@ class Notification extends Model
                     $item_to_send['dest_mail'],
                     $item_to_send['dest_mail'],
                     Security::filter_terms($item_to_send['title']),
-                    Security::filter_terms($item_to_send['content']),
+                    2,
                     $this->adminName,
                     $this->adminEmail
                 );
@@ -227,18 +227,19 @@ class Notification extends Model
     /**
      * Save message notification.
      *
-     * @param int    $type                       message type
+     * @param int $messageId
+     * @param int $type message type
      *                                           NOTIFICATION_TYPE_MESSAGE,
      *                                           NOTIFICATION_TYPE_INVITATION,
      *                                           NOTIFICATION_TYPE_GROUP
-     * @param int    $messageId
-     * @param array  $userList                   recipients: user list of ids
+     * @param array $userList recipients: user list of ids
      * @param string $title
      * @param string $content
-     * @param array  $senderInfo                 result of api_get_user_info() or GroupPortalManager:get_group_data()
-     * @param array  $attachments
-     * @param array  $smsParameters
-     * @param bool   $forceTitleWhenSendingEmail force the use of $title as subject instead of "You have a new message"
+     * @param array $senderInfo result of api_get_user_info() or GroupPortalManager:get_group_data()
+     * @param array $attachments
+     * @param array $smsParameters
+     * @param bool $forceTitleWhenSendingEmail force the use of $title as subject instead of "You have a new message"
+     * @throws \PHPMailer\PHPMailer\Exception
      */
     public function saveNotification(
         $messageId,
@@ -338,7 +339,9 @@ class Notification extends Model
                                 $extraHeaders,
                                 $attachments,
                                 false,
-                                $smsParameters
+                                ['HTML'=> Security::filter_terms($content)],
+                                '',
+                                2
                             );
                         }
                         $sendDate = api_get_utc_datetime();

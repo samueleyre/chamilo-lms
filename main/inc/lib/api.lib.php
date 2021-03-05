@@ -9177,22 +9177,24 @@ function api_create_protected_dir($name, $parentDirectory)
  * Sender name and email can be specified, if not specified
  * name and email of the platform admin are used.
  *
+ * @param $recipient_name
+ * @param $recipient_email
+ * @param $subject
+ * @param $templateId
+ * @param string $senderName
+ * @param string $senderEmail
+ * @param array $extra_headers in form $headers = array($name => $value) to allow parsing
+ * @param array $data_file (path and filename)
+ * @param bool $embedded_image True for attaching a embedded file inside content html (optional)
+ * @param array $additionalParameters
+ * @param string $sendErrorTo If there's an error while sending the email, $sendErrorTo will receive a notification
+ * @param int $templateIdOld sendinblue template
+ * @return int true if mail was sent
+ *
+ * @throws \PHPMailer\PHPMailer\Exception
+ * @throws Exception
  * @author Bert Vanderkimpen ICT&O UGent
  * @author Yannick Warnier <yannick.warnier@beeznest.com>
- *
- * @param string    name of recipient
- * @param string    email of recipient
- * @param string    email subject
- * @param string    email body
- * @param string    sender name
- * @param string    sender e-mail
- * @param array  $extra_headers        in form $headers = array($name => $value) to allow parsing
- * @param array  $data_file            (path and filename)
- * @param bool   $embedded_image       True for attaching a embedded file inside content html (optional)
- * @param array  $additionalParameters
- * @param string $sendErrorTo          If there's an error while sending the email, $sendErrorTo will receive a notification
- *
- * @return int true if mail was sent
  *
  * @see             PHPMailer.php
  */
@@ -9207,13 +9209,94 @@ function api_mail_html(
     $data_file = [],
     $embedded_image = false,
     $additionalParameters = [],
-    $sendErrorTo = ''
+    $sendErrorTo = '',
+    $templateId = null
 ) {
+
+//    '','',[],[],false, [], '', null
+
+    global $sendInBlue;
+
+    if (
+        null === $templateId
+    ) {
+        throw new \Exception('no template defined');
+    }
+     if (
+        true === api_get_configuration_value('disable_send_mail')
+    ) {
+        throw new \Exception('email disabled');
+    }
+
+    $config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $sendInBlue['API']);
+
+    $apiInstance = new SendinBlue\Client\Api\TransactionalEmailsApi(
+        new GuzzleHttp\Client(),
+        $config
+    );
+    $sendSmtpEmail = new \SendinBlue\Client\Model\SendSmtpEmail();
+    $sendSmtpEmail['templateId'] = $templateId;
+    $sendSmtpEmail['to'] = [['email' => $recipient_email]];
+    $sendSmtpEmail['params'] = $additionalParameters;
+
+    try {
+        $apiInstance->sendTransacEmail($sendSmtpEmail);
+        return true;
+    } catch (Exception $e) {
+        throw new \Exception('Exception when calling TransactionalEmailsApi->sendTransacEmail: '. $e->getMessage());
+    }
+
+//
+//    $curl = curl_init();
+//
+//
+////The data you want to send via POST
+//    $fields = [
+//        '__VIEWSTATE '      => $state,
+//        '__EVENTVALIDATION' => $valid,
+//        'btnSubmit'         => 'Submit'
+//    ];
+//
+////url-ify the data for the POST
+//    $fields_string = http_build_query($fields);
+//
+//    curl_setopt_array($curl, [
+//        CURLOPT_URL => "https://api.sendinblue.com/v3/smtp/email",
+//        CURLOPT_RETURNTRANSFER => true,
+//        CURLOPT_ENCODING => "",
+//        CURLOPT_MAXREDIRS => 10,
+//        CURLOPT_TIMEOUT => 30,
+//        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+//        CURLOPT_CUSTOMREQUEST => "POST",
+//        CURLOPT_HTTPHEADER => [
+//            "Accept: application/json",
+//            "Content-Type: application/json"
+//        ],
+//        CURLOPT_POSTFIELDS =>
+//    ]);
+//
+//    $response = curl_exec($curl);
+//    $err = curl_error($curl);
+//
+//    curl_close($curl);
+//
+//    if ($err) {
+//        echo "cURL Error #:" . $err;
+//    } else {
+//        echo $response;
+//    }
+
+
+
+
+
+
+
+
+
+
     global $platform_email;
 
-    if (true === api_get_configuration_value('disable_send_mail')) {
-        return true;
-    }
 
     $mail = new PHPMailer();
     $mail->Mailer = $platform_email['SMTP_MAILER'];
@@ -9377,6 +9460,9 @@ function api_mail_html(
         $mail->DKIM_private_string = $platform_email['DKIM_PRIVATE_KEY_STRING'];
         $mail->DKIM_private = $platform_email['DKIM_PRIVATE_KEY'];
     }
+
+    $ret = $mail->Send();
+    return $mail->ErrorInfo;
 
     // Send the mail message.
     if (!$mail->Send()) {

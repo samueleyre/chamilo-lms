@@ -81,7 +81,11 @@ foreach ($list as $mail) {
             $emailsubject,
             $emailbody,
             $sender_name,
-            $email_admin
+            $email_admin,
+            [],[],false,
+            ['NEW_PASSWORD' => $pass],
+            '',
+            4
         );
         echo "[OK] Sent to $mail with new password $pass (encrypted:$crypass)... w/ subject: $emailsubject\n";
     }
