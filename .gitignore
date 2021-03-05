@@ -52,3 +52,6 @@ plugin/vchamilo/templates/*
 web/assets/*
 node_modules
 yarn.lock
+
+# created on load
+web/build/*
