@@ -11,8 +11,8 @@ jobs:
       - name: Pull code on server
         uses: appleboy/ssh-action@v0.0.7
         with:
-          host: ${{ secrets.host }}
-          username: ${{ secrets.user }}
-          password: ${{ secrets.password }}
-          port: ${{ secrets.port }}
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          password: ${{ secrets.STAGING_PASSWORD }}
+          port: ${{ secrets.STAGING_PORT }}
           script: cd chamilo; git pull origin fc-staging --rebase
