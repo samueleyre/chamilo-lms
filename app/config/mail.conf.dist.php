@@ -28,3 +28,7 @@ $platform_email['DKIM_SELECTOR'] = 'chamilo'; // an indicator of the application
 $platform_email['DKIM_DOMAIN'] = 'mydomain.com'; //the domain for e-mail sending, not necessarily api_get_path(WEB_PATH)
 $platform_email['DKIM_PRIVATE_KEY_STRING'] = ''; //the private key in a string format
 $platform_email['DKIM_PRIVATE_KEY'] = ''; //the private key as the path to a file. The file needs to be accessible to PHP!
+
+$sendInBlue['API'] = 'api_key';
+$sendInBlue['sender'] = 'email@example.com';
+$sendInBlue['templates'] = ['example' => 3];
