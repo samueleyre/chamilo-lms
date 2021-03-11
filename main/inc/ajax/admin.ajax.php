@@ -135,7 +135,7 @@ function version_check()
  */
 function check_system_version()
 {
-    if (api_get_setting('dont_check_version') === true) {
+    if (api_get_configuration_value('dont_check_version') === true) {
         return "";
     }
 
@@ -256,7 +256,7 @@ function check_system_version()
 function getLatestNews()
 {
 
-    if (api_get_setting('dont_check_version') === true) {
+    if (api_get_configuration_value('dont_check_version') === true) {
         throw new Exception();
     }
 
