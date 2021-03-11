@@ -340,7 +340,7 @@ function save_data($users, $sendMail = false)
  *
  * @return array
  */
-function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = true, $resumeImport = false, $session = null)
+function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = true, $resumeImport = false, $session = null, $classId = null)
 {
     $usersFromOrigin = $users;
     $allowRandom = api_get_configuration_value('generate_random_login');
@@ -391,6 +391,9 @@ function parse_csv_data($users, $fileName, $sendEmail = 0, $checkUniqueEmail = t
 
         if ($session) {
             $user['Sessions'] = [$session];
+
+            // add class to user
+            $user['ClassId'] = $classId;
         }
         elseif (isset($user['Sessions'])) {
             $user['Sessions'] = explode('|', trim($user['Sessions']));
@@ -538,6 +541,15 @@ if (isset($_POST['formSent']) && $_POST['formSent'] && $_FILES['import_file']['s
     $uploadInfo = pathinfo($_FILES['import_file']['name']);
     $ext_import_file = $uploadInfo['extension'];
 
+    $classId = null;
+    if ($session) {
+        // create class ( usergroup )
+        $userGroup = new UserGroup();
+        $sessionInfo = api_get_session_info($session);
+        $classId = $userGroup->save(['name' => "Classe pour ".$sessionInfo['name']]);
+        $userGroup->subscribe_sessions_to_usergroup($classId, [$session]);
+    }
+
     $users = [];
     if (in_array($ext_import_file, $allowed_file_mimetype)) {
         if (strcmp($file_type, 'csv') === 0 &&
@@ -551,7 +563,8 @@ if (isset($_POST['formSent']) && $_POST['formSent'] && $_FILES['import_file']['s
                 $sendMail,
                 $checkUniqueEmail,
                 $resume,
-                $session
+                $session,
+                $classId
             );
             $users = validate_data($users, $checkUniqueEmail);
             $error_kind_file = false;
