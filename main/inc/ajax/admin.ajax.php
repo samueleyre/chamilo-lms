@@ -135,6 +135,10 @@ function version_check()
  */
 function check_system_version()
 {
+    if (api_get_setting('dont_check_version') === true) {
+        return "";
+    }
+
     // Check if curl is available.
     if (!in_array('curl', get_loaded_extensions())) {
         return '<span style="color:red">'.get_lang('ImpossibleToContactVersionServerPleaseTryAgain').'</span>';
@@ -251,6 +255,11 @@ function check_system_version()
  */
 function getLatestNews()
 {
+
+    if (api_get_setting('dont_check_version') === true) {
+        throw new Exception();
+    }
+
     $url = 'https://version.chamilo.org/news/latest.php';
 
     $client = new Client();

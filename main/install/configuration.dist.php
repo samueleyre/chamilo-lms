@@ -1850,6 +1850,9 @@ ALTER TABLE gradebook_comment ADD CONSTRAINT FK_C3B70763AD3ED51C FOREIGN KEY (gr
 // Show exercise report from all courses in a new page: exercise/pending.php
 //$_configuration['my_courses_show_pending_exercise_attempts'] = true;
 
+// Don't check version
+$_configuration['dont_check_version'] = true;
+
 // KEEP THIS AT THE END
 // -------- Custom DB changes
 // Add user activation by confirmation email
