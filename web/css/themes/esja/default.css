@@ -63,22 +63,22 @@ a:focus {
   overflow: hidden !important;
 }
 .navbar-default {
-  background: #337AB7;
+  background: white;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
 }
 .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-  color: #A4DC2D;
+  color: #81d9d9;
 }
 .navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
-  color: #fff;
-  background-color: #2C5B8E;
+  color: #38bcbc;
+  background-color: #e6e6e6;
 }
 .navbar-default .navbar-nav > li > a {
-  color: #ffffff;
+  color: #38bcbc;
 }
 .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
-  background: #18477A;
-  color: #ffffff;
+  background-color: #e6e6e6;
+  color: #38bcbc;
 }
 .navbar-nav > li > .dropdown-menu {
   min-width: 100%;
