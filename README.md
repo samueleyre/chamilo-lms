@@ -1,3 +1,32 @@
+# Instance chamilo pour Futurs composés
+
+## Local install
+
+### ddev
+
+- install ddev : https://www.ddev.com/get-started/
+- launch ddev : ddev start
+- create user for db ( root // root )
+
+### website
+
+- ddev exec bash ; composer install ( you might need to do it twice )
+- go to http://chamilo-1.11.ddev.site/
+- use config mysql :
+  - hôte : db 
+  - port : 3306 
+  - user : root
+  - pwd : root
+
+
+## new tools
+
+### update scss
+
+- compile scss & update css of the tpl of the theme : composer update-theme-css
+
+---
+
 # Chamilo 1.11.x
 
 ![PHP Composer](https://github.com/chamilo/chamilo-lms/workflows/PHP%20Composer/badge.svg?branch=1.11.x)

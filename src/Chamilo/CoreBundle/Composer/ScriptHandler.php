@@ -3,6 +3,7 @@
 
 namespace Chamilo\CoreBundle\Composer;
 
+use ScssPhp\ScssPhp\Compiler;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -258,6 +259,32 @@ class ScriptHandler
 
         foreach ($cssFiles as $file) {
             $fs->copy($appCss.$file, $newPath.$file, true);
+        }
+    }
+
+    public static function updateThemeCss()
+    {
+        $appCss = __DIR__.'/../../../../app/Resources/public/css/themes';
+        $newPath = __DIR__.'/../../../../web/css/themes';
+        $fs = new Filesystem();
+        $fs->mirror($appCss, $newPath, null, ['override' => true]);
+    }
+
+    /**
+     * generate theme css files from scss.
+     */
+    public static function generateCssFromScss()
+    {
+        $scss = new Compiler();
+        $scssThemeDirectory = 'app/Resources/scss/themes/';
+        $cssThemeDirectory = 'app/Resources/public/css/themes/';
+
+        $themeNames = array_diff(scandir($scssThemeDirectory), array('..', '.'));
+
+        foreach($themeNames as $themeName) {
+            $scss->setImportPaths($scssThemeDirectory.$themeName);
+            $content = $scss->compile('@import "default.scss";');
+            file_put_contents($cssThemeDirectory.$themeName.'/default.css', $content);
         }
     }
 
