@@ -15,4 +15,4 @@ jobs:
           username: ${{ secrets.PRODUCTION_USER }}
           password: ${{ secrets.PRODUCTION_PASSWORD }}
           port: ${{ secrets.PRODUCTION_PORT }}
-          script: cd chamilo; git pull origin fc-production
+          script: cd www; git pull origin fc-production
