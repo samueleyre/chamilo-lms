@@ -883,7 +883,7 @@ ALTER TABLE skill_rel_course ADD CONSTRAINT FK_E7CEC7FA613FECDF FOREIGN KEY (ses
 //$_configuration['allow_base_course_category'] = false;
 
 // Send two emails when creating a user. One with the username other with the password.
-//$_configuration['send_two_inscription_confirmation_mail'] = false;
+$_configuration['send_two_inscription_confirmation_mail'] = false;
 
 // LP view custom settings
 /*$_configuration['lp_view_settings'] = [

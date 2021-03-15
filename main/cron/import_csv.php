@@ -872,15 +872,16 @@ class ImportCsv
                                             '',
                                             $email,
                                             $subject,
-                                            2,
+                                            $body,
                                             '',
                                             '',
                                             [],
                                             [],
                                             false,
                                             [],
-                                            ''
-                                        );
+                                            '',
+                                            $GLOBALS['sendInBlue']['templates']['TEST']
+                                    );
                                     }
                                     catch (\Exception $e) {
                                         Display::addFlash(

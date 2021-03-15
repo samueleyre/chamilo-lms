@@ -85,7 +85,7 @@ foreach ($list as $mail) {
             [],[],false,
             ['NEW_PASSWORD' => $pass],
             '',
-            4
+            $GLOBALS['sendInBlue']['templates']['FIRST_PASSWORD']
         );
         echo "[OK] Sent to $mail with new password $pass (encrypted:$crypass)... w/ subject: $emailsubject\n";
     }

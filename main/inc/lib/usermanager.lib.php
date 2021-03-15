@@ -580,7 +580,7 @@ class UserManager
                                 null,
                                 ['HTML' => $emailBody],
                                 '',
-                                2
+                                $GLOBALS['sendInBlue']['templates']['WELCOME']
                             );
                         }
                         catch (\Exception $e) {
@@ -615,7 +615,7 @@ class UserManager
                                 null,
                                 ['HTML' => $emailBody],
                                 $creatorEmail,
-                                2
+                                $GLOBALS['sendInBlue']['templates']['WELCOME']
                             );
                         }
                         catch (\Exception $e) {
@@ -656,7 +656,7 @@ class UserManager
                                     null,
                                     ['HTML'=>$emailBody],
                                     $creatorEmail,
-                                    2
+                                    $GLOBALS['sendInBlue']['templates']['WELCOME']
                                 );
                             }
                             catch (\Exception $e) {

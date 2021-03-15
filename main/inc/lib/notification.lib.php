@@ -129,7 +129,7 @@ class Notification extends Model
                     $item_to_send['dest_mail'],
                     $item_to_send['dest_mail'],
                     Security::filter_terms($item_to_send['title']),
-                    2,
+                    Security::filter_terms($item_to_send['content']),
                     $this->adminName,
                     $this->adminEmail
                 );
@@ -328,6 +328,7 @@ class Notification extends Model
                             ];
                         }
 
+
                         if (!empty($userInfo['email'])) {
                             api_mail_html(
                                 $userInfo['complete_name'],
@@ -341,7 +342,7 @@ class Notification extends Model
                                 false,
                                 ['HTML'=> Security::filter_terms($content)],
                                 '',
-                                2
+                                $GLOBALS['sendInBlue']['templates']['WELCOME']
                             );
                         }
                         $sendDate = api_get_utc_datetime();

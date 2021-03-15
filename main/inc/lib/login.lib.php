@@ -131,7 +131,7 @@ class Login
             $sender_name,
             $email_admin,
             [],[],false,
-            ['NEW_PASSWORD'=> $user_account_list], '', 5
+            ['NEW_PASSWORD'=> $user_account_list], '', $GLOBALS['sendInBlue']['templates']['NEW_PASSWORD']
         );
         if ($result == 1) {
             return get_lang('YourPasswordHasBeenReset');
@@ -206,7 +206,7 @@ class Login
             false,
             ['RESET_PASSWORD_LINK' => $link],
             '',
-            6
+            $GLOBALS['sendInBlue']['templates']['CHANGE_PASSWORD']
 
 
         );
