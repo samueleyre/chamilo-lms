@@ -9,10 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Pull code on server
-        uses: appleboy/ssh-action@v0.0.7
+        uses: appleboy/ssh-action@v0.1.1
         with:
           host: ${{ secrets.PRODUCTION_HOST }}
           username: ${{ secrets.PRODUCTION_USER }}
           password: ${{ secrets.PRODUCTION_PASSWORD }}
           port: ${{ secrets.PRODUCTION_PORT }}
+          use_insecure_cipher: true
           script: cd www; git pull origin fc-production
