@@ -11,6 +11,10 @@
 $titleFont : 'Comfortaa', cursive;
 $paragraphFont : 'Poppins', sans-serif;
 
+* {
+  font-family: $paragraphFont;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: $titleFont;
 }
